@@ -55,17 +55,9 @@ default: $(sagefile)
 format-markdown: $(sagefile)
 	@$(sagefile) FormatMarkdown
 
-.PHONY: format-yaml
-format-yaml: $(sagefile)
-	@$(sagefile) FormatYaml
-
 .PHONY: git-verify-no-diff
 git-verify-no-diff: $(sagefile)
 	@$(sagefile) GitVerifyNoDiff
-
-.PHONY: go-licenses
-go-licenses: $(sagefile)
-	@$(sagefile) GoLicenses
 
 .PHONY: go-lint
 go-lint: $(sagefile)
@@ -75,6 +67,13 @@ go-lint: $(sagefile)
 go-mod-tidy: $(sagefile)
 	@$(sagefile) GoModTidy
 
+.PHONY: go-releaser
+go-releaser: $(sagefile)
+ifndef snapshot
+	 $(error missing argument snapshot="...")
+endif
+	@$(sagefile) GoReleaser "$(snapshot)"
+
 .PHONY: go-review
 go-review: $(sagefile)
 	@$(sagefile) GoReview
@@ -82,3 +81,13 @@ go-review: $(sagefile)
 .PHONY: go-test
 go-test: $(sagefile)
 	@$(sagefile) GoTest
+
+.PHONY: semantic-release
+semantic-release: $(sagefile)
+ifndef repo
+	 $(error missing argument repo="...")
+endif
+ifndef dry
+	 $(error missing argument dry="...")
+endif
+	@$(sagefile) SemanticRelease "$(repo)" "$(dry)"
