@@ -397,7 +397,7 @@ func inferField(
 			field.Widget.RequiredValue = true
 			if len(resource.Pattern) > 0 {
 				pattern := resource.Pattern[0]
-				exp := regexp.MustCompile(`{.*}`).ReplaceAllString(pattern, `[a-z][a-z0-9-]{0,61}[a-z0-9]`)
+				exp := regexp.MustCompile(`{.*}`).ReplaceAllString(pattern, `^[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$`)
 				field.Widget.Pattern = &cmsv1.Widget_Pattern{
 					Regexp:       exp,
 					ErrorMessage: "Must match " + exp,
@@ -463,14 +463,16 @@ func inferField(
 			},
 		}
 		return field, len(objectFields) > 0
-	case protoField.Desc.Kind() == protoreflect.DoubleKind && !protoField.Desc.IsList():
+	case (protoField.Desc.Kind() == protoreflect.DoubleKind ||
+		protoField.Desc.Kind() == protoreflect.FloatKind) && !protoField.Desc.IsList():
 		field.Widget.WidgetType = &cmsv1.Widget_NumberWidget{
 			NumberWidget: &cmsv1.NumberWidget{
 				ValueType: cmsv1.NumberWidget_FLOAT,
 			},
 		}
 		return field, true
-	case protoField.Desc.Kind() == protoreflect.Int64Kind && !protoField.Desc.IsList():
+	case (protoField.Desc.Kind() == protoreflect.Int64Kind ||
+		protoField.Desc.Kind() == protoreflect.Int32Kind) && !protoField.Desc.IsList():
 		field.Widget.WidgetType = &cmsv1.Widget_NumberWidget{
 			NumberWidget: &cmsv1.NumberWidget{
 				ValueType: cmsv1.NumberWidget_INT,
