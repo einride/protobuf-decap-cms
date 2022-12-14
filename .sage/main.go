@@ -20,11 +20,18 @@ func main() {
 			Path:          sg.FromGitRoot("Makefile"),
 			DefaultTarget: Default,
 		},
+
+		sg.Makefile{
+			Path:          sg.FromGitRoot("proto", "Makefile"),
+			Namespace:     Proto{},
+			DefaultTarget: Proto{}.Default,
+		},
 	)
 }
 
 func Default(ctx context.Context) error {
 	sg.Deps(ctx, ConvcoCheck, FormatMarkdown)
+	sg.Deps(ctx, Proto.Default)
 	sg.Deps(ctx, GoLint, GoReview)
 	sg.Deps(ctx, GoTest)
 	sg.Deps(ctx, GoModTidy)

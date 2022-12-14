@@ -91,3 +91,7 @@ ifndef dry
 	 $(error missing argument dry="...")
 endif
 	@$(sagefile) SemanticRelease "$(repo)" "$(dry)"
+
+.PHONY: proto
+proto:
+	$(MAKE) -C proto -f Makefile

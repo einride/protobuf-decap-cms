@@ -1,0 +1,446 @@
+syntax = "proto3";
+
+package einride.netlify.cms.v1;
+
+import "google/protobuf/descriptor.proto";
+
+extend google.protobuf.FileOptions {
+  // $((16#$(echo einride.netlify.cms.v1.config | sha256sum | cut -c 1-7)))
+  Config config = 220007734;
+}
+
+extend google.protobuf.MessageOptions {
+  // $((16#$(echo einride.netlify.cms.v1.collection | sha256sum | cut -c 1-7)))
+  Collection collection = 73371499;
+}
+
+extend google.protobuf.FieldOptions {
+  // $((16#$(echo einride.netlify.cms.v1.field | sha256sum | cut -c 1-7)))
+  Field field = 265097061;
+}
+
+// Netlify CMS config.
+message Config {
+  // Specifies how to access the content for your site,
+  // including authentication.
+  Backend backend = 1;
+
+  // Allows you to enable "Editorial Workflow" mode for more control
+  // over the content publishing phases.
+  PublishMode publish_mode = 2;
+
+  // Specifies the folder path where uploaded files should be saved,
+  // relative to the base of the repo.
+  string media_folder = 3;
+
+  // Change the logo displayed at the top of the login page,
+  // allowing you to brand the CMS with your own logo.
+  string logo_url = 4;
+
+  // The slug configuration.
+  Slug slug = 5;
+
+  // The heart of your Netlify CMS configuration,
+  // as it determines how content types and editor fields in the UI generate files
+  // and content in your repository.
+  repeated Collection collections = 6;
+
+  // Backend config.
+  message Backend {
+    // Name of the backend.
+    string name = 1;
+    // The git repo.
+    // Required for github, gitlab, and bitbucket backends; ignored by git-gateway.
+    // Follows the pattern [org-or-username]/[repo-name].
+    string repo = 2;
+    // The branch where published content is stored.
+    // All CMS commits and PRs are made to this branch.
+    string branch = 3;
+    // The squash merge option causes all commits to be "squashed" into a single commit
+    // when the pull request is merged, and the resulting commit is rebased onto
+    // the target branch.
+    bool squash_merges = 4;
+    // Customize the templates used by Netlify CMS to generate commit messages.
+    CommitMessages commit_messages = 5;
+    // OAuth client hostname (just the base domain, no path).
+    string base_url = 6;
+    // Sets the site_id query param sent to the API endpoint.
+    string site_domain = 7;
+
+    // Commit message templates.
+    message CommitMessages {
+      // A new entry is created.
+      string create = 1;
+      // An existing entry is changed.
+      string update = 2;
+      // An existing entry is deleted.
+      string delete = 3;
+      // A media file is uploaded.
+      string upload_media = 4;
+      // A media file is deleted.
+      string delete_media = 5;
+      // A commit is made via a forked repository.
+      string open_authoring = 6;
+    }
+  }
+
+  // Publish mode.
+  enum PublishMode {
+    // Default value. This value is unused.
+    PUBLISH_MODE_UNSPECIFIED = 0;
+    // All unpublished entries will be arranged in a board according to their status,
+    // and they can be further reviewed and edited before going live.
+    EDITORIAL_WORKFLOW = 1;
+  }
+
+  // Slug configuration.
+  //
+  // The slug option allows you to change how filenames for entries are created
+  // and sanitized. It also applies to filenames of media inserted via the
+  // default media library.
+  message Slug {
+    // The slug encoding.
+    Encoding encoding = 1;
+    // Set to true to remove diacritics from slug characters before sanitizing.
+    // This is often helpful when using ascii encoding.
+    bool clean_accents = 2;
+    // The replacement string used to substitute unsafe characters, defaults to -.
+    string sanitize_replacement = 3;
+    // Slug encoding.
+    enum Encoding {
+      // Default value. This value is unused.
+      ENCODING_UNSPECIFIED = 0;
+      // Sanitize filenames (slugs) according to RFC3987 and the WHATWG URL spec.
+      // This spec allows non-ASCII (or non-Latin) characters to exist in URLs.
+      UNICODE = 1;
+      // Sanitize filenames (slugs) according to RFC3986.
+      // The only allowed characters are (0-9, a-z, A-Z, _, -, ~).
+      ASCII = 2;
+    }
+  }
+}
+
+// Netlify CMS collection config.
+message Collection {
+  // Unique identifier for the collection, used as the key when referenced in other contexts
+  // (like the relation widget).
+  string name = 1;
+  // An entry's title when viewing a list of entries, and is used in slug creation.
+  string identifier_field = 2;
+  // Label for the collection in the editor UI; defaults to the value of name.
+  string label = 3;
+  // Singular label for certain elements in the editor; defaults to the value of label.
+  string label_singular = 4;
+  // Optional text, displayed below the label when viewing a collection.
+  string description = 5;
+  // Folder location.
+  string folder = 6;
+  // True allows users to create new items in the collection; defaults to false.
+  bool create = 7;
+  // TODO.
+  string format = 8;
+  // TODO.
+  string summary = 9;
+  // Editor config.
+  Editor editor = 10;
+  // Maps editor UI widgets to field-value pairs in the saved file.
+  repeated Field fields = 11;
+  // Owner of the collection.
+  Owner owner = 12;
+
+  // Editor config.
+  message Editor {
+    // Set to false to disable the preview pane for this collection or file.
+    bool preview = 1;
+  }
+}
+
+// An owner.
+message Owner {
+  // Display name of the owner.
+  string display_name = 1;
+  // URI of the owner.
+  string uri = 2;
+}
+
+// Netlify CMS field config.
+message Field {
+  // Unique identifier for the field.
+  // Used as the key when referenced in other contexts (like the relation widget).
+  string name = 1;
+  // Label for the field in the editor UI; defaults to the value of name.
+  string label = 2;
+  // Optional comment to add before the field (only supported for yaml).
+  string comment = 3;
+  // The field widget.
+  Widget widget = 4;
+  // Flag indicating that this field should be ignored by Netlify CMS.
+  bool ignore = 5;
+  // Owner of the field (automatically appended to the label).
+  Owner owner = 6;
+}
+
+// Widgets define the data type and interface for entry fields.
+message Widget {
+  // Whether the widget is mandatory.
+  bool required_value = 1;
+  // Helper text directly below the widget.
+  string hint = 2;
+  // The validation pattern.
+  Pattern pattern = 3;
+  // The widget type.
+  oneof widget_type {
+    // Boolean widget.
+    BooleanWidget boolean_widget = 4;
+    // Code widget.
+    CodeWidget code_widget = 5;
+    // Color widget.
+    ColorWidget color_widget = 6;
+    // DateTime widget.
+    DateTimeWidget date_time_widget = 8;
+    // File widget.
+    FileWidget file_widget = 9;
+    // Hidden widget.
+    HiddenWidget hidden_widget = 10;
+    // Image widget.
+    ImageWidget image_widget = 11;
+    // List widget.
+    ListWidget list_widget = 12;
+    // Map widget.
+    MapWidget map_widget = 13;
+    // Markdown widget.
+    MarkdownWidget markdown_widget = 14;
+    // Number widget.
+    NumberWidget number_widget = 15;
+    // Object widget.
+    ObjectWidget object_widget = 16;
+    // Relation widget.
+    RelationWidget relation_widget = 17;
+    // Select widget.
+    SelectWidget select_widget = 18;
+    // String widget.
+    StringWidget string_widget = 19;
+    // Text widget.
+    TextWidget text_widget = 20;
+  }
+  // Add field validation by specifying a list with a regex pattern and an error message.
+  // More extensive validation can be achieved with custom widgets.
+  message Pattern {
+    // Regexp to use for validation.
+    string regexp = 1;
+    // Error message when validation fails.
+    string error_message = 2;
+  }
+}
+
+// The boolean widget translates a toggle switch input to a true/false value.
+message BooleanWidget {
+  // Default value.
+  bool default_value = 1;
+}
+
+// The code widget provides a code editor (powered by Codemirror) with optional syntax awareness.
+message CodeWidget {
+  // Default language to use.
+  string default_language = 1;
+  // Allows syntax to be changed.
+  bool allow_language_selection = 2;
+  // Sets key names if outputting to an object.
+  Keys keys = 3;
+  // Sets key names if outputting to an object.
+  message Keys {
+    // Key name for code. Defaults to 'code'.
+    string code = 1;
+    // Key name for lang. Defaults to 'lang'.
+    string lang = 2;
+  }
+}
+
+// The color widget translates a color picker to a color string.
+message ColorWidget {
+  // Sets the default value.
+  string default_value = 1;
+  // Allows manual editing of the color input value.
+  bool allow_input = 2;
+  // Enables alpha editing.
+  bool enable_alpha = 3;
+}
+
+// The datetime widget translates a datetime picker to a datetime string.
+message DateTimeWidget {
+  // Accepts a datetime string. Defaults to current datetime.
+  string default_value = 1;
+  // Sets storage format. Accepts Moment.js tokens. Defaults to raw Date object.
+  string format = 2;
+  // Sets date display format in UI. Accepts Moment.js tokens.
+  string date_format = 3;
+  // Sets time display format in UI. Accepts Moment.js tokens.
+  string time_format = 4;
+  // When set to true, the datetime picker will display times in UTC.
+  bool picker_utc = 5;
+}
+
+// The file widget allows editors to upload a file or select an existing one from the media library.
+message FileWidget {
+  // Accepts a file path string.
+  string default_value = 1;
+  // TODO: Add remaining fields.
+}
+
+// Hidden widgets do not display in the UI.
+message HiddenWidget {
+  // Accepts any valid data type.
+  oneof default_value {
+    // Default bool.
+    bool default_bool = 1;
+    // Default string.
+    string default_string = 2;
+    // Default double.
+    double default_double = 3;
+    // Default int64.
+    int64 default_int64 = 4;
+  }
+}
+
+// The image widget allows editors to upload an image or select an existing one from the media library.
+message ImageWidget {
+  // Accepts a file path string.
+  string default_value = 1;
+  // TODO: Add remaining fields.
+}
+
+// The list widget allows you to create a repeatable item in the UI which saves as a list of widget values.
+message ListWidget {
+  // Shows the button to add additional items.
+  bool allow_add = 1;
+  // Collapse the entries.
+  bool collapsed = 2;
+  // Specify the label displayed on collapsed entries.
+  string summary = 3;
+  // Collapse the list widget to hide all of it's entries.
+  bool minimize_collapsed = 4;
+  // Text to show on the add button.
+  string label_singular = 5;
+  // Widget fields to be included in each repeatable iteration.
+  repeated Field fields = 6;
+  // Maximum number of items in the list.
+  int64 max_items = 7;
+  // Minimum number of items in the list.
+  int64 min_items = 8;
+  // Add new entries to the top of the list.
+  bool add_to_top = 9;
+}
+
+// The map widget allows you to edit spatial data using an interactive map.
+message MapWidget {
+  // Accepts a number to specify precision of saved coordinates.
+  // Defaults to 7 decimals.
+  int64 decimals = 1;
+  // Accepts a GeoJSON string containing a single geometry.
+  string default_value = 2;
+  // The type of GeoJSON object.
+  Type type = 3;
+  // GeoJSON type.
+  enum Type {
+    // Default value. This value is unused.
+    TYPE_UNSPECIFIED = 0;
+    // Point.
+    POINT = 1;
+    // LineString.
+    LINE_STRING = 2;
+    // Polygon.
+    POLYGON = 3;
+  }
+}
+
+// The markdown widget provides a full fledged text editor
+// allowing users to format text with features such as headings and blockquotes.
+message MarkdownWidget {
+  // Accepts markdown content.
+  string default_value = 1;
+  // Sets the widget height to minimum possible.
+  bool minimal = 2;
+  // TODO: Add more fields.
+}
+
+// The markdown widget provides a full fledged text editor allowing users to format text with features such as headings and blockquotes.
+message NumberWidget {
+  // Default value.
+  double default_value = 1;
+  // The value type.
+  ValueType value_type = 2;
+  // Minimum value accepted.
+  double min_value = 3;
+  // Maximum value accepted.
+  double max_value = 4;
+  // Number for stepping up/down values. 1 by default.
+  double step = 5;
+  // Value type of the number widget.
+  enum ValueType {
+    // Default value. This value is unused.
+    VALUE_TYPE_UNSPECIFIED = 0;
+    // Int.
+    INT = 1;
+    // Float.
+    FLOAT = 2;
+    // String.
+    STRING = 3;
+  }
+}
+
+// The object widget allows you to group multiple widgets together, nested under a single field.
+message ObjectWidget {
+  // Collapse the widgets content by default.
+  bool collapsed = 1;
+  // Specify the label displayed when the object is collapsed.
+  string summary = 2;
+  // A nested list of widget fields.
+  repeated Field fields = 3;
+}
+
+// The relation widget allows you to reference items from another collection.
+message RelationWidget {
+  // Name of the referenced collection.
+  string collection = 1;
+  // Name of the field from the referenced collection.
+  string value_field = 2;
+  // Names of fields in the to search for the typed value.
+  repeated string search_fields = 3;
+  // Names of fields in the that will render in the autocomplete menu.
+  repeated string display_fields = 4;
+  // Flag indicating if multiple values are supported.
+  bool multiple = 5;
+}
+
+// The select widget allows you to pick a string value from a dropdown menu.
+message SelectWidget {
+  // Default value.
+  repeated string default_value = 1;
+  // Selectable options.
+  repeated Option options = 2;
+  // Allow multiple selection.
+  bool multiple = 3;
+  // Minimum selection of multiple items.
+  int64 multiple_min = 4;
+  // Maximum selection of multiple items.
+  int64 multiple_max = 5;
+  // Option with label and value.
+  message Option {
+    // The label.
+    string label = 1;
+    // The value.
+    string value = 2;
+  }
+}
+
+// The string widget translates a basic text input to a string value. For larger textarea inputs, use the text widget.
+message StringWidget {
+  // Default value.
+  string default_value = 1;
+}
+
+// The text widget takes a multiline text field and saves it as a string. For shorter text inputs, use the string widget.
+message TextWidget {
+  // Default value.
+  string default_value = 1;
+}
