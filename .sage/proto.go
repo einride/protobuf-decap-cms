@@ -16,6 +16,7 @@ func (Proto) Default(ctx context.Context) error {
 	sg.Deps(ctx, Proto.BufFormat)
 	sg.Deps(ctx, Proto.CleanGenerated)
 	sg.Deps(ctx, Proto.BufGenerate)
+	sg.Deps(ctx, Proto.BufGenerateExample)
 	return nil
 }
 
@@ -43,6 +44,13 @@ func (Proto) ProtocGenGo(ctx context.Context) error {
 	return err
 }
 
+func (Proto) ProtocGenNetlifyCMS(ctx context.Context) error {
+	sg.Logger(ctx).Println("building binary...")
+	return sg.Command(
+		ctx, "go", "build", "-o", sg.FromBinDir("protoc-gen-netlify-cms"), "./cmd/protoc-gen-netlify-cms",
+	).Run()
+}
+
 func (Proto) CleanGenerated(ctx context.Context) error {
 	sg.Logger(ctx).Println("cleaning generated files...")
 	return os.RemoveAll(sg.FromGitRoot("proto", "gen"))
@@ -53,6 +61,16 @@ func (Proto) BufGenerate(ctx context.Context) error {
 	sg.Logger(ctx).Println("generating proto stubs...")
 	cmd := sgbuf.Command(
 		ctx, "generate", "--output", sg.FromGitRoot(), "--template", "buf.gen.yaml", "--path", "einride",
+	)
+	cmd.Dir = sg.FromGitRoot("proto")
+	return cmd.Run()
+}
+
+func (Proto) BufGenerateExample(ctx context.Context) error {
+	sg.Deps(ctx, Proto.BufGenerate, Proto.ProtocGenGo, Proto.ProtocGenNetlifyCMS)
+	sg.Logger(ctx).Println("generating Netlify CMS config...")
+	cmd := sgbuf.Command(
+		ctx, "generate", "--output", sg.FromGitRoot(), "--template", "buf.gen.example.yaml", "--path", "einride",
 	)
 	cmd.Dir = sg.FromGitRoot("proto")
 	return cmd.Run()
