@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+package einride.netlify.cms.example.v1;
+
+import "einride/netlify/cms/v1/annotations.proto";
+import "google/api/field_behavior.proto";
+import "google/api/resource.proto";
+import "google/protobuf/timestamp.proto";
+
+// A kitchen sink example message.
+message KitchenSink {
+  option (google.api.resource) = {
+    type: "netlify-cms-example.einride.tech/KitchenSink",
+    pattern: "kitchenSinks/{kitchen_sink}"
+  };
+  option (einride.netlify.cms.v1.collection) = {
+    name: "kitchen_sinks"
+    label: "Kitchen Sinks"
+    label_singular: "Kitchen Sink"
+    folder: "example/kitchenSinks"
+    create: true
+    identifier_field: "name"
+    format: "json"
+    description: "Kitchen sink example messages"
+    summary: "{{display_name}}"
+    editor: {preview: false}
+  };
+
+  // The resource name of the kitchen sink.
+  string name = 1;
+
+  // The timestamp the kitchen sink was created.
+  google.protobuf.Timestamp create_time = 2 [(google.api.field_behavior) = OUTPUT_ONLY];
+
+  // The revision ID of the kitchen sink.
+  string revision_id = 3 [
+    (google.api.field_behavior) = IMMUTABLE,
+    (google.api.field_behavior) = OUTPUT_ONLY
+  ];
+
+  // The timestamp when the kitchen sink revision was created.
+  google.protobuf.Timestamp revision_create_time = 4 [(google.api.field_behavior) = OUTPUT_ONLY];
+
+  // Display name of the kitchen sink.
+  string display_name = 5 [(google.api.field_behavior) = REQUIRED];
+
+  // An example enum.
+  ExampleEnum example_enum = 6 [(google.api.field_behavior) = REQUIRED];
+
+  // A double value.
+  double double_value = 7;
+
+  // A float value.
+  float float_value = 8;
+
+  // An int64 value.
+  int64 int64_value = 9;
+
+  // Example enum.
+  enum ExampleEnum {
+    // Default value. This value is unused.
+    EXAMPLE_ENUM_UNSPECIFIED = 0;
+    // One.
+    ONE = 1;
+    // Two.
+    TWO = 2;
+  }
+}
