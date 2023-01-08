@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package einride.netlify.cms.example.v1;
+
+import "einride/netlify/cms/v1/annotations.proto";
+
+option (einride.netlify.cms.v1.config) = {
+  backend: {
+    name: "github"
+    repo: "einride/protoc-gen-netlify-cms"
+    branch: "master"
+    squash_merges: true
+    commit_messages: {
+      create: "feat({{collection}}): create {{slug}}"
+      update: "feat({{collection}}): update {{slug}}"
+      delete: "feat({{collection}}): delete {{slug}}"
+      upload_media: "feat(media): upload {{path}}"
+      delete_media: "feat(media): delete {{path}}"
+    }
+  }
+  slug: {
+    encoding: ASCII
+    clean_accents: true
+    sanitize_replacement: "-"
+  }
+  publish_mode: EDITORIAL_WORKFLOW
+  media_folder: "example/uploads"
+  logo_url: "/logo.svg"
+};

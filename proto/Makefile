@@ -51,6 +51,10 @@ buf-format: $(sagefile)
 buf-generate: $(sagefile)
 	@$(sagefile) Proto:BufGenerate
 
+.PHONY: buf-generate-example
+buf-generate-example: $(sagefile)
+	@$(sagefile) Proto:BufGenerateExample
+
 .PHONY: buf-lint
 buf-lint: $(sagefile)
 	@$(sagefile) Proto:BufLint
@@ -66,3 +70,7 @@ default: $(sagefile)
 .PHONY: protoc-gen-go
 protoc-gen-go: $(sagefile)
 	@$(sagefile) Proto:ProtocGenGo
+
+.PHONY: protoc-gen-netlify-cms
+protoc-gen-netlify-cms: $(sagefile)
+	@$(sagefile) Proto:ProtocGenNetlifyCMS
