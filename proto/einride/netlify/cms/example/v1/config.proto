@@ -6,9 +6,7 @@ import "einride/netlify/cms/v1/annotations.proto";
 
 option (einride.netlify.cms.v1.config) = {
   backend: {
-    name: "github"
-    repo: "einride/protoc-gen-netlify-cms"
-    branch: "master"
+    name: "git-gateway"
     squash_merges: true
     commit_messages: {
       create: "feat({{collection}}): create {{slug}}"
@@ -18,12 +16,12 @@ option (einride.netlify.cms.v1.config) = {
       delete_media: "feat(media): delete {{path}}"
     }
   }
+  local_backend: {url: "http://localhost:8081/api/v1"}
   slug: {
     encoding: ASCII
     clean_accents: true
     sanitize_replacement: "-"
   }
-  publish_mode: EDITORIAL_WORKFLOW
   media_folder: "example/uploads"
   logo_url: "/logo.svg"
 };

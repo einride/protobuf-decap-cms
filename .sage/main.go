@@ -2,6 +2,10 @@ package main
 
 import (
 	"context"
+	"net"
+	"net/http"
+	"os"
+	"time"
 
 	"go.einride.tech/sage/sg"
 	"go.einride.tech/sage/tools/sgconvco"
@@ -106,4 +110,44 @@ func GoReleaser(ctx context.Context, snapshot bool) error {
 		args = append(args, "--snapshot")
 	}
 	return sggoreleaser.Command(ctx, args...).Run()
+}
+
+func ExampleConfig(ctx context.Context) error {
+	sg.Deps(ctx, Proto.BufGenerateExample)
+	sg.Logger(ctx).Println("copying example config...")
+	data, err := os.ReadFile(
+		sg.FromGitRoot("proto", "gen", "cms", "einride", "netlify", "cms", "example", "v1", "config.yml"),
+	)
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(sg.FromGitRoot("example", "admin", "config.yml"), data, 0o0600)
+}
+
+func LocalProxyServer(ctx context.Context) error {
+	sg.Logger(ctx).Println("starting local proxy server...")
+	return sg.Command(ctx, "npm", "exec", "netlify-cms-proxy-server").Run()
+}
+
+func LocalFileServer(ctx context.Context) error {
+	sg.Deps(ctx, ExampleConfig)
+	sg.Logger(ctx).Println("starting local file server...")
+	const address = ":8080"
+	sg.Logger(ctx).Printf("starting admin app on %s...", address)
+	mux := http.NewServeMux()
+	mux.Handle("/", http.FileServer(http.Dir(sg.FromGitRoot("example", "admin"))))
+	server := &http.Server{
+		Handler:           mux,
+		ReadHeaderTimeout: 10 * time.Second,
+	}
+	lis, err := (&net.ListenConfig{}).Listen(ctx, "tcp", address)
+	if err != nil {
+		return err
+	}
+	return server.Serve(lis)
+}
+
+func Develop(ctx context.Context) error {
+	sg.Deps(ctx, LocalFileServer, LocalProxyServer)
+	return nil
 }

@@ -32,6 +32,13 @@ func main() {
 			g.Up()
 			genBackend(g, config.GetBackend())
 			g.Down()
+			if config.GetLocalBackend() != nil {
+				g.Y()
+				g.Y("local_backend:")
+				g.Up()
+				genLocalBackend(g, config.GetLocalBackend())
+				g.Down()
+			}
 			g.Y()
 			g.Y("slug:")
 			g.Up()
@@ -99,6 +106,12 @@ func genBackend(g *generatedYAMLFile, backend *cmsv1.Config_Backend) {
 			g.Y("deleteMedia: ", strconv.Quote(backend.GetCommitMessages().GetDeleteMedia()))
 		}
 		g.Down()
+	}
+}
+
+func genLocalBackend(g *generatedYAMLFile, localBackend *cmsv1.Config_LocalBackend) {
+	if localBackend.GetUrl() != "" {
+		g.Y("url: ", strconv.Quote(localBackend.GetUrl()))
 	}
 }
 
@@ -397,7 +410,8 @@ func inferField(
 			field.Widget.RequiredValue = true
 			if len(resource.Pattern) > 0 {
 				pattern := resource.Pattern[0]
-				exp := regexp.MustCompile(`{.*}`).ReplaceAllString(pattern, `^[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$`)
+				exp := regexp.MustCompile(`{.*}`).ReplaceAllString(pattern, `[a-z0-9][a-z0-9-]{0,61}[a-z0-9]`)
+				exp = "^" + exp + "$"
 				field.Widget.Pattern = &cmsv1.Widget_Pattern{
 					Regexp:       exp,
 					ErrorMessage: "Must match " + exp,

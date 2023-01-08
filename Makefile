@@ -51,6 +51,14 @@ convco-check: $(sagefile)
 default: $(sagefile)
 	@$(sagefile) Default
 
+.PHONY: develop
+develop: $(sagefile)
+	@$(sagefile) Develop
+
+.PHONY: example-config
+example-config: $(sagefile)
+	@$(sagefile) ExampleConfig
+
 .PHONY: format-markdown
 format-markdown: $(sagefile)
 	@$(sagefile) FormatMarkdown
@@ -81,6 +89,14 @@ go-review: $(sagefile)
 .PHONY: go-test
 go-test: $(sagefile)
 	@$(sagefile) GoTest
+
+.PHONY: local-file-server
+local-file-server: $(sagefile)
+	@$(sagefile) LocalFileServer
+
+.PHONY: local-proxy-server
+local-proxy-server: $(sagefile)
+	@$(sagefile) LocalProxyServer
 
 .PHONY: semantic-release
 semantic-release: $(sagefile)
