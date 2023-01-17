@@ -397,7 +397,8 @@ func inferField(
 			field.Widget.RequiredValue = true
 			if len(resource.Pattern) > 0 {
 				pattern := resource.Pattern[0]
-				exp := regexp.MustCompile(`{.*}`).ReplaceAllString(pattern, `^[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$`)
+				exp := regexp.MustCompile(`{.*}`).ReplaceAllString(pattern, `[a-z0-9][a-z0-9-]{0,61}[a-z0-9]`)
+				exp = fmt.Sprintf("^%v$", exp)
 				field.Widget.Pattern = &cmsv1.Widget_Pattern{
 					Regexp:       exp,
 					ErrorMessage: "Must match " + exp,
