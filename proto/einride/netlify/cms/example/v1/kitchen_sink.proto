@@ -56,6 +56,17 @@ message KitchenSink {
   // An int64 value.
   int64 int64_value = 9;
 
+  // A value with a custom widget.
+  string custom_value = 10 [(einride.netlify.cms.v1.field) = {
+    widget: {
+      custom_widget: {
+        widget: "test"
+        options: "outer:"
+        options: "  inner: 42"
+      }
+    }
+  }];
+
   // Example enum.
   enum ExampleEnum {
     // Default value. This value is unused.
