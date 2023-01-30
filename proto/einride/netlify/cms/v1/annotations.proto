@@ -231,6 +231,8 @@ message Widget {
     StringWidget string_widget = 19;
     // Text widget.
     TextWidget text_widget = 20;
+    // Custom widget.
+    CustomWidget custom_widget = 21;
   }
   // Add field validation by specifying a list with a regex pattern and an error message.
   // More extensive validation can be achieved with custom widgets.
@@ -240,6 +242,14 @@ message Widget {
     // Error message when validation fails.
     string error_message = 2;
   }
+}
+
+// The boolean widget translates a toggle switch input to a true/false value.
+message CustomWidget {
+  // Type of the custom widget.
+  string widget = 1;
+  // Widget options, as raw YAML strings appended to the custom widget.
+  repeated string options = 2;
 }
 
 // The boolean widget translates a toggle switch input to a true/false value.

@@ -155,3 +155,14 @@ collections:
         hint: "An int64 value."
         widget: "number"
         value_type: "int"
+
+      - name: "custom_value"
+        label: "CUSTOM VALUE"
+        comment: "A value with a custom widget."
+        required: false
+        hint: "A value with a custom widget."
+        widget: "test"
+        bar: 'baz'
+        foo: 5
+        outer:
+          inner: 42
