@@ -479,6 +479,7 @@ func inferField(
 		return field, len(objectFields) > 0
 	case (protoField.Desc.Kind() == protoreflect.DoubleKind ||
 		protoField.Desc.Kind() == protoreflect.FloatKind) && !protoField.Desc.IsList():
+		field.Widget.RequiredValue = true // required since Netlify uses empty string for no value instead of 0
 		field.Widget.WidgetType = &cmsv1.Widget_NumberWidget{
 			NumberWidget: &cmsv1.NumberWidget{
 				ValueType: cmsv1.NumberWidget_FLOAT,
@@ -487,6 +488,7 @@ func inferField(
 		return field, true
 	case (protoField.Desc.Kind() == protoreflect.Int64Kind ||
 		protoField.Desc.Kind() == protoreflect.Int32Kind) && !protoField.Desc.IsList():
+		field.Widget.RequiredValue = true // required since Netlify uses empty string for no value instead of 0
 		field.Widget.WidgetType = &cmsv1.Widget_NumberWidget{
 			NumberWidget: &cmsv1.NumberWidget{
 				ValueType: cmsv1.NumberWidget_INT,
