@@ -180,7 +180,10 @@ func genField(g *generatedYAMLFile, field *cmsv1.Field) {
 	if field.GetComment() != "" {
 		g.Y("comment: ", strconv.Quote(field.GetComment()))
 	}
-	g.Y("required: ", strconv.FormatBool(field.GetWidget().GetRequiredValue()))
+	// Number widget required is handled in switch case
+	if _, isNumberWidget := field.GetWidget().GetWidgetType().(*cmsv1.Widget_NumberWidget); !isNumberWidget {
+		g.Y("required: ", strconv.FormatBool(field.GetWidget().GetRequiredValue()))
+	}
 	if field.GetWidget().GetHint() != "" {
 		g.Y("hint: ", strconv.Quote(strings.TrimSpace(field.GetWidget().GetHint())))
 	}
@@ -252,6 +255,10 @@ func genField(g *generatedYAMLFile, field *cmsv1.Field) {
 	case *cmsv1.Widget_NumberWidget:
 		g.Y("widget: ", strconv.Quote("number"))
 		g.Y("value_type: ", strconv.Quote(strings.ToLower(widget.NumberWidget.ValueType.String())))
+		g.Y("required: ", true) // required since Netlify uses empty string for no value instead of 0
+		if !field.Widget.RequiredValue {
+			g.Y("default: ", widget.NumberWidget.DefaultValue)
+		}
 	case *cmsv1.Widget_RelationWidget:
 		g.Y("widget: ", strconv.Quote("relation"))
 		g.Y("collection: ", strconv.Quote(widget.RelationWidget.Collection))
@@ -484,7 +491,6 @@ func inferField(
 		return field, len(objectFields) > 0
 	case (protoField.Desc.Kind() == protoreflect.DoubleKind ||
 		protoField.Desc.Kind() == protoreflect.FloatKind) && !protoField.Desc.IsList():
-		field.Widget.RequiredValue = true // required since Netlify uses empty string for no value instead of 0
 		field.Widget.WidgetType = &cmsv1.Widget_NumberWidget{
 			NumberWidget: &cmsv1.NumberWidget{
 				ValueType: cmsv1.NumberWidget_FLOAT,
@@ -493,7 +499,6 @@ func inferField(
 		return field, true
 	case (protoField.Desc.Kind() == protoreflect.Int64Kind ||
 		protoField.Desc.Kind() == protoreflect.Int32Kind) && !protoField.Desc.IsList():
-		field.Widget.RequiredValue = true // required since Netlify uses empty string for no value instead of 0
 		field.Widget.WidgetType = &cmsv1.Widget_NumberWidget{
 			NumberWidget: &cmsv1.NumberWidget{
 				ValueType: cmsv1.NumberWidget_INT,
