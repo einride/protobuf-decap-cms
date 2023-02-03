@@ -135,26 +135,29 @@ collections:
       - name: "double_value"
         label: "DOUBLE VALUE"
         comment: "A double value."
-        required: true
         hint: "A double value."
         widget: "number"
         value_type: "float"
+        required: true
+        default: 0
 
       - name: "float_value"
         label: "FLOAT VALUE"
         comment: "A float value."
-        required: true
         hint: "A float value."
         widget: "number"
         value_type: "float"
+        required: true
+        default: 0
 
       - name: "int64_value"
         label: "INT64 VALUE"
         comment: "An int64 value."
-        required: true
         hint: "An int64 value."
         widget: "number"
         value_type: "int"
+        required: true
+        default: 0
 
       - name: "custom_value"
         label: "CUSTOM VALUE"
