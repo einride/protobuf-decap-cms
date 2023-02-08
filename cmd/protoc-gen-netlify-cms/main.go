@@ -208,6 +208,7 @@ func genField(g *generatedYAMLFile, field *cmsv1.Field) {
 		if len(widget.SelectWidget.DefaultValue) == 1 {
 			g.Y("default: ", strconv.Quote(widget.SelectWidget.DefaultValue[0]))
 		}
+		g.Y("multiple: ", widget.SelectWidget.Multiple)
 		g.Y("options:")
 		g.Up()
 		for _, option := range widget.SelectWidget.Options {
@@ -435,7 +436,9 @@ func inferField(
 		return field, true
 	case protoField.Desc.Kind() == protoreflect.EnumKind:
 		field.Widget.WidgetType = &cmsv1.Widget_SelectWidget{
-			SelectWidget: &cmsv1.SelectWidget{},
+			SelectWidget: &cmsv1.SelectWidget{
+				Multiple: protoField.Desc.IsList(),
+			},
 		}
 		var options []*cmsv1.SelectWidget_Option
 		for i := 0; i < protoField.Desc.Enum().Values().Len(); i++ {
