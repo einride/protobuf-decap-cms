@@ -126,6 +126,7 @@ collections:
         required: true
         hint: "An example enum."
         widget: "select"
+        multiple: false
         options:
           - label: "ONE"
             value: "ONE"
