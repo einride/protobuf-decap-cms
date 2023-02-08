@@ -466,7 +466,7 @@ func inferField(
 		}
 		field.Widget.WidgetType = &cmsv1.Widget_ObjectWidget{
 			ObjectWidget: &cmsv1.ObjectWidget{
-				Collapsed: true,
+				Collapsed: !inferRequired(protoField),
 				Summary:   "", // TODO
 				Fields:    objectFields,
 			},
@@ -486,7 +486,7 @@ func inferField(
 		field.Widget.WidgetType = &cmsv1.Widget_ListWidget{
 			ListWidget: &cmsv1.ListWidget{
 				AllowAdd:          true,
-				Collapsed:         true,
+				Collapsed:         !inferRequired(protoField),
 				MinimizeCollapsed: true,
 				Fields:            objectFields,
 			},
