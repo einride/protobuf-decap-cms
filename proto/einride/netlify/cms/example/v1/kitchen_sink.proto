@@ -27,7 +27,16 @@ message KitchenSink {
   };
 
   // The resource name of the kitchen sink.
-  string name = 1;
+  string name = 1 [(einride.netlify.cms.v1.field) = {
+    widget: {
+      custom_widget: {
+        widget: "string"
+        options: "default: 'kitchenSinks/'"
+        options: "outer:"
+        options: "  inner: 42"
+      }
+    }
+  }];
 
   // The timestamp the kitchen sink was created.
   google.protobuf.Timestamp create_time = 2 [(google.api.field_behavior) = OUTPUT_ONLY];
