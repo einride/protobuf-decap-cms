@@ -101,7 +101,9 @@ collections:
           - "^kitchenSinks/[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$"
           - "Must match ^kitchenSinks/[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$"
         widget: "string"
-        default: "kitchenSinks/"
+        default: 'kitchenSinks/'
+        outer:
+          inner: 42
 
       - name: "create_time"
         label: "CREATE TIME"
@@ -126,6 +128,7 @@ collections:
         required: true
         hint: "An example enum."
         widget: "select"
+        multiple: false
         options:
           - label: "ONE"
             value: "ONE"
@@ -135,26 +138,29 @@ collections:
       - name: "double_value"
         label: "DOUBLE VALUE"
         comment: "A double value."
-        required: false
         hint: "A double value."
         widget: "number"
         value_type: "float"
+        required: true
+        default: 0
 
       - name: "float_value"
         label: "FLOAT VALUE"
         comment: "A float value."
-        required: false
         hint: "A float value."
         widget: "number"
         value_type: "float"
+        required: true
+        default: 0
 
       - name: "int64_value"
         label: "INT64 VALUE"
         comment: "An int64 value."
-        required: false
         hint: "An int64 value."
         widget: "number"
         value_type: "int"
+        required: true
+        default: 0
 
       - name: "custom_value"
         label: "CUSTOM VALUE"
@@ -162,7 +168,5 @@ collections:
         required: false
         hint: "A value with a custom widget."
         widget: "test"
-        bar: 'baz'
-        foo: 5
         outer:
           inner: 42

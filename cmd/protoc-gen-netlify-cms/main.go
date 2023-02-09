@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"regexp"
 	"strconv"
 	"strings"
@@ -375,9 +376,44 @@ func inferField(
 		}
 		proto.Merge(field, fieldAnnotation)
 	}
-	if field.Widget.WidgetType != nil {
-		return field, true // if a widget is specified, no further inference
+
+	// special handling for the name field - which needs to be a proto string field
+	if resource := proto.GetExtension(
+		protoMessage.Desc.Options(),
+		annotations.E_Resource,
+	).(*annotations.ResourceDescriptor); resource != nil && protoField.Desc.Name() == "name" {
+		if !(protoField.Desc.Kind() == protoreflect.StringKind && !protoField.Desc.IsList()) {
+			log.Fatalf("name field must be proto string type")
+		}
+
+		field.Label = "RESOURCE NAME"
+		field.Widget.RequiredValue = true
+		if field.Widget.WidgetType == nil {
+			field.Widget.WidgetType = &cmsv1.Widget_StringWidget{
+				StringWidget: &cmsv1.StringWidget{},
+			}
+		}
+		if len(resource.Pattern) > 0 {
+			pattern := resource.Pattern[0]
+			exp := regexp.MustCompile(`{.*}`).ReplaceAllString(pattern, `[a-z0-9][a-z0-9-]{0,61}[a-z0-9]`)
+			exp = "^" + exp + "$"
+			field.Widget.Pattern = &cmsv1.Widget_Pattern{
+				Regexp:       exp,
+				ErrorMessage: "Must match " + exp,
+			}
+			defaultValue := pattern[:strings.Index(pattern, "/")+1]
+			if sw, ok := field.Widget.WidgetType.(*cmsv1.Widget_StringWidget); ok {
+				sw.StringWidget.DefaultValue = defaultValue
+			}
+		}
+		return field, true
 	}
+
+	// if a widget is specified, no further inference
+	if field.Widget.WidgetType != nil {
+		return field, true
+	}
+
 	if owner, ok := resolveFieldOwner(append(parentFields, protoField)); ok {
 		field.Widget.Hint += fmt.Sprintf(" **[[%s]](%s)**", owner.DisplayName, owner.Uri)
 	}
@@ -414,24 +450,6 @@ func inferField(
 	case protoField.Desc.Kind() == protoreflect.StringKind && !protoField.Desc.IsList():
 		field.Widget.WidgetType = &cmsv1.Widget_StringWidget{
 			StringWidget: &cmsv1.StringWidget{},
-		}
-		if resource := proto.GetExtension(
-			protoMessage.Desc.Options(),
-			annotations.E_Resource,
-		).(*annotations.ResourceDescriptor); resource != nil && protoField.Desc.Name() == "name" {
-			field.Label = "RESOURCE NAME"
-			field.Widget.RequiredValue = true
-			if len(resource.Pattern) > 0 {
-				pattern := resource.Pattern[0]
-				exp := regexp.MustCompile(`{.*}`).ReplaceAllString(pattern, `[a-z0-9][a-z0-9-]{0,61}[a-z0-9]`)
-				exp = "^" + exp + "$"
-				field.Widget.Pattern = &cmsv1.Widget_Pattern{
-					Regexp:       exp,
-					ErrorMessage: "Must match " + exp,
-				}
-				defaultValue := pattern[:strings.Index(pattern, "/")+1]
-				field.Widget.WidgetType.(*cmsv1.Widget_StringWidget).StringWidget.DefaultValue = defaultValue
-			}
 		}
 		return field, true
 	case protoField.Desc.Kind() == protoreflect.EnumKind:
