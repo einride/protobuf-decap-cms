@@ -187,6 +187,8 @@ message Field {
   bool ignore = 5;
   // Owner of the field (automatically appended to the label).
   Owner owner = 6;
+  // The summary for the list widget - see more at https://www.netlifycms.org/docs/widgets/list/.
+  string list_widget_summary = 7;
 }
 
 // Widgets define the data type and interface for entry fields.

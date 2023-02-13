@@ -76,6 +76,9 @@ message KitchenSink {
     }
   }];
 
+  // A nested list of some specs to show usage of a list widget.
+  repeated SomeSpec specs = 11 [(einride.netlify.cms.v1.field) = {list_widget_summary: "{{fields.name}} - count: {{fields.count}}"}];
+
   // Example enum.
   enum ExampleEnum {
     // Default value. This value is unused.
@@ -84,5 +87,11 @@ message KitchenSink {
     ONE = 1;
     // Two.
     TWO = 2;
+  }
+
+  // SomeSpec is a dummy message struct holds some dummy fields.
+  message SomeSpec {
+    string name = 1;
+    int32 count = 2;
   }
 }

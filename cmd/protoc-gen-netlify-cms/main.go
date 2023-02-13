@@ -506,6 +506,7 @@ func inferField(
 				AllowAdd:          true,
 				Collapsed:         !inferRequired(protoField),
 				MinimizeCollapsed: true,
+				Summary:           field.ListWidgetSummary,
 				Fields:            objectFields,
 			},
 		}
