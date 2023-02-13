@@ -170,3 +170,27 @@ collections:
         widget: "test"
         outer:
           inner: 42
+
+      - name: "specs"
+        label: "SPECS"
+        comment: "A nested list of some specs to show usage of a list widget."
+        required: false
+        hint: "A nested list of some specs to show usage of a list widget."
+        widget: "list"
+        collapsed: true
+        minimize_collapsed: true
+        summary: "{{fields.name}} - count: {{fields.count}}"
+        fields:
+
+          - name: "name"
+            label: "NAME"
+            required: false
+            widget: "string"
+            default: ""
+
+          - name: "count"
+            label: "COUNT"
+            widget: "number"
+            value_type: "int"
+            required: true
+            default: 0

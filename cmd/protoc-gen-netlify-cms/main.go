@@ -410,7 +410,7 @@ func inferField(
 	}
 
 	// if a widget is specified, no further inference
-	if field.Widget.WidgetType != nil {
+	if field.Widget.WidgetType != nil && isWidgetTypACustomWidget(field.Widget.WidgetType) {
 		return field, true
 	}
 
@@ -501,13 +501,20 @@ func inferField(
 				objectFields = append(objectFields, objectField)
 			}
 		}
+
+		listWidget := &cmsv1.ListWidget{
+			AllowAdd:          true,
+			Collapsed:         !inferRequired(protoField),
+			MinimizeCollapsed: true,
+			Fields:            objectFields,
+		}
+		if field.Widget.WidgetType != nil {
+			userDefinedListWidget := field.Widget.WidgetType.(*cmsv1.Widget_ListWidget).ListWidget
+			proto.Merge(listWidget, userDefinedListWidget)
+		}
+
 		field.Widget.WidgetType = &cmsv1.Widget_ListWidget{
-			ListWidget: &cmsv1.ListWidget{
-				AllowAdd:          true,
-				Collapsed:         !inferRequired(protoField),
-				MinimizeCollapsed: true,
-				Fields:            objectFields,
-			},
+			ListWidget: listWidget,
 		}
 		return field, len(objectFields) > 0
 	case (protoField.Desc.Kind() == protoreflect.DoubleKind ||
@@ -565,4 +572,13 @@ func (g *generatedYAMLFile) Up() {
 
 func (g *generatedYAMLFile) Down() {
 	g.level--
+}
+
+func isWidgetTypACustomWidget(t interface{}) bool {
+	switch t.(type) {
+	case *cmsv1.Widget_CustomWidget:
+		return true
+	default:
+		return false
+	}
 }
