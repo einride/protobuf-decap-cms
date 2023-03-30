@@ -76,8 +76,23 @@ message KitchenSink {
     }
   }];
 
+  // A value with relation to another entity
+  string book = 11 [
+    (google.api.resource_reference).type = "netlify-cms-example.einride.tech/Book",
+    (google.api.field_behavior) = REQUIRED,
+    (einride.netlify.cms.v1.field).widget = {
+      relation_widget: {
+        collection: "books"
+        value_field: "name"
+        search_fields: "name"
+        search_fields: "title"
+        display_fields: "title"
+      }
+    }
+  ];
+
   // A nested list of some specs to show usage of a list widget.
-  repeated SomeSpec specs = 11 [(einride.netlify.cms.v1.field) = {
+  repeated SomeSpec specs = 12 [(einride.netlify.cms.v1.field) = {
     widget: {
       list_widget: {summary: "{{fields.name}} - count: {{fields.count}}"}
     }
