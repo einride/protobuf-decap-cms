@@ -171,6 +171,21 @@ collections:
         outer:
           inner: 42
 
+      - name: "book"
+        label: "BOOK"
+        comment: "A value with relation to another entity"
+        required: true
+        hint: "A value with relation to another entity"
+        widget: "relation"
+        collection: "books"
+        value_field: "name"
+        search_fields:
+          - "name"
+          - "title"
+        display_fields:
+          - "title"
+        multiple: false
+
       - name: "specs"
         label: "SPECS"
         comment: "A nested list of some specs to show usage of a list widget."

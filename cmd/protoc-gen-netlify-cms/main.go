@@ -409,8 +409,8 @@ func inferField(
 		return field, true
 	}
 
-	// if a widget is specified, no further inference
-	if field.Widget.WidgetType != nil && isWidgetTypACustomWidget(field.Widget.WidgetType) {
+	// if a widget is specified and is a type that is not able to do more decoration, no further inference
+	if field.Widget.WidgetType != nil && isUnDecoratableWidgetType(field.Widget.WidgetType) {
 		return field, true
 	}
 
@@ -574,11 +574,11 @@ func (g *generatedYAMLFile) Down() {
 	g.level--
 }
 
-func isWidgetTypACustomWidget(t interface{}) bool {
+func isUnDecoratableWidgetType(t interface{}) bool {
 	switch t.(type) {
-	case *cmsv1.Widget_CustomWidget:
-		return true
-	default:
+	case *cmsv1.Widget_ListWidget:
 		return false
+	default:
+		return true
 	}
 }
