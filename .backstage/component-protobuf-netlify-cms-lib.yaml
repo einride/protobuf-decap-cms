@@ -1,0 +1,12 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: protobuf-netlify-cms-lib
+  description: "Protobuf plugin to manage resources in Netlify CMS"
+  annotations:
+    github.com/project-slug: einride/protobuf-netlify-cms
+    github.com/team-slug: einride/team-fleet-performance
+spec:
+  type: library
+  lifecycle: production
+  owner: team-fleet-performance
