@@ -5,8 +5,8 @@ metadata:
   description: "Protobuf plugin to manage resources in Netlify CMS"
   annotations:
     github.com/project-slug: einride/protobuf-netlify-cms
-    github.com/team-slug: einride/team-fleet-performance
+    github.com/team-slug: einride/team-analytic-apps
 spec:
   type: library
   lifecycle: production
-  owner: team-fleet-performance
+  owner: team-analytic-apps
