@@ -1,12 +1,10 @@
-Protobuf Netlify CMS
-====================
+# Protobuf Netlify CMS
 
 Manage protobuf resources using [Netlify CMS](https://www.netlifycms.org/).
 
 ![Screenshot](./docs/screenshot.png)
 
-How to
-------
+## How to
 
 ### Step 1: Define your protobuf resource(s)
 
@@ -51,7 +49,8 @@ message Book {
 
 ### Step 3: Configure a Netlify CMS collection
 
-See [Netlify CMS Configuration: Collections](https://www.netlifycms.org/docs/configuration-options/#collections).
+See
+[Netlify CMS Configuration: Collections](https://www.netlifycms.org/docs/configuration-options/#collections).
 
 ```proto
 message Book {
@@ -80,7 +79,8 @@ message Book {
 
 ### Step 4: Add Netlify CMS config to your proto package
 
-See [Netlify CMS Configuration](https://www.netlifycms.org/docs/configuration-options/#collections).
+See
+[Netlify CMS Configuration](https://www.netlifycms.org/docs/configuration-options/#collections).
 
 ```proto
 option (einride.netlify.cms.v1.config) = {
@@ -97,7 +97,8 @@ option (einride.netlify.cms.v1.config) = {
 
 ### Step 5: Generate a Netlify CMS YAML config
 
-Use the [protoc-gen-netlify-cms](./cmd/protoc-gen-netlify-cms) protobuf plugin to generate a Netlify CMS YAML config.
+Use the [protoc-gen-netlify-cms](./cmd/protoc-gen-netlify-cms) protobuf plugin
+to generate a Netlify CMS YAML config.
 
 ```yaml
 version: v1
