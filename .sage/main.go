@@ -13,7 +13,6 @@ import (
 	"go.einride.tech/sage/tools/sggo"
 	"go.einride.tech/sage/tools/sggolangcilint"
 	"go.einride.tech/sage/tools/sggoreleaser"
-	"go.einride.tech/sage/tools/sggoreview"
 	"go.einride.tech/sage/tools/sggosemanticrelease"
 	"go.einride.tech/sage/tools/sgmdformat"
 )
@@ -36,7 +35,7 @@ func main() {
 func Default(ctx context.Context) error {
 	sg.Deps(ctx, ConvcoCheck, FormatMarkdown)
 	sg.Deps(ctx, Proto.Default)
-	sg.Deps(ctx, GoLint, GoReview)
+	sg.Deps(ctx, GoLint)
 	sg.Deps(ctx, GoTest)
 	sg.Deps(ctx, GoModTidy)
 	sg.Deps(ctx, GitVerifyNoDiff)
@@ -51,11 +50,6 @@ func GoModTidy(ctx context.Context) error {
 func GoTest(ctx context.Context) error {
 	sg.Logger(ctx).Println("running Go tests...")
 	return sggo.TestCommand(ctx).Run()
-}
-
-func GoReview(ctx context.Context) error {
-	sg.Logger(ctx).Println("reviewing Go files...")
-	return sggoreview.Run(ctx)
 }
 
 func GoLint(ctx context.Context) error {
