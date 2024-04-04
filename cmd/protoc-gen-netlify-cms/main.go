@@ -198,24 +198,24 @@ func genField(g *generatedYAMLFile, field *cmsv1.Field) {
 	switch widget := field.GetWidget().GetWidgetType().(type) {
 	case *cmsv1.Widget_StringWidget:
 		g.Y("widget: ", strconv.Quote("string"))
-		g.Y("default: ", strconv.Quote(widget.StringWidget.DefaultValue))
+		g.Y("default: ", strconv.Quote(widget.StringWidget.GetDefaultValue()))
 	case *cmsv1.Widget_TextWidget:
 		g.Y("widget: ", strconv.Quote("text"))
-		g.Y("default: ", strconv.Quote(widget.TextWidget.DefaultValue))
+		g.Y("default: ", strconv.Quote(widget.TextWidget.GetDefaultValue()))
 	case *cmsv1.Widget_BooleanWidget:
 		g.Y("widget: ", strconv.Quote("boolean"))
 	case *cmsv1.Widget_SelectWidget:
 		g.Y("widget: ", strconv.Quote("select"))
-		if len(widget.SelectWidget.DefaultValue) == 1 {
-			g.Y("default: ", strconv.Quote(widget.SelectWidget.DefaultValue[0]))
+		if len(widget.SelectWidget.GetDefaultValue()) == 1 {
+			g.Y("default: ", strconv.Quote(widget.SelectWidget.GetDefaultValue()[0]))
 		}
-		g.Y("multiple: ", widget.SelectWidget.Multiple)
+		g.Y("multiple: ", widget.SelectWidget.GetMultiple())
 		g.Y("options:")
 		g.Up()
-		for _, option := range widget.SelectWidget.Options {
-			g.Y("- label: ", strconv.Quote(option.Label))
+		for _, option := range widget.SelectWidget.GetOptions() {
+			g.Y("- label: ", strconv.Quote(option.GetLabel()))
 			g.Up()
-			g.Y("value: ", strconv.Quote(option.Value))
+			g.Y("value: ", strconv.Quote(option.GetValue()))
 			g.Down()
 		}
 		g.Down()
@@ -229,57 +229,57 @@ func genField(g *generatedYAMLFile, field *cmsv1.Field) {
 		}
 	case *cmsv1.Widget_ObjectWidget:
 		g.Y("widget: ", strconv.Quote("object"))
-		g.Y("collapsed: ", strconv.FormatBool(widget.ObjectWidget.Collapsed))
-		if widget.ObjectWidget.Summary != "" {
-			g.Y("summary: ", strconv.Quote(widget.ObjectWidget.Summary))
+		g.Y("collapsed: ", strconv.FormatBool(widget.ObjectWidget.GetCollapsed()))
+		if widget.ObjectWidget.GetSummary() != "" {
+			g.Y("summary: ", strconv.Quote(widget.ObjectWidget.GetSummary()))
 		}
 		g.Y("fields:")
 		g.Up()
-		for _, objectField := range widget.ObjectWidget.Fields {
+		for _, objectField := range widget.ObjectWidget.GetFields() {
 			genField(g, objectField)
 		}
 		g.Down()
 	case *cmsv1.Widget_ListWidget:
 		g.Y("widget: ", strconv.Quote("list"))
-		g.Y("collapsed: ", strconv.FormatBool(widget.ListWidget.Collapsed))
-		g.Y("minimize_collapsed: ", strconv.FormatBool(widget.ListWidget.MinimizeCollapsed))
-		if widget.ListWidget.Summary != "" {
-			g.Y("summary: ", strconv.Quote(widget.ListWidget.Summary))
+		g.Y("collapsed: ", strconv.FormatBool(widget.ListWidget.GetCollapsed()))
+		g.Y("minimize_collapsed: ", strconv.FormatBool(widget.ListWidget.GetMinimizeCollapsed()))
+		if widget.ListWidget.GetSummary() != "" {
+			g.Y("summary: ", strconv.Quote(widget.ListWidget.GetSummary()))
 		}
-		if len(widget.ListWidget.Fields) > 0 {
+		if len(widget.ListWidget.GetFields()) > 0 {
 			g.Y("fields:")
 			g.Up()
-			for _, objectField := range widget.ListWidget.Fields {
+			for _, objectField := range widget.ListWidget.GetFields() {
 				genField(g, objectField)
 			}
 			g.Down()
 		}
 	case *cmsv1.Widget_NumberWidget:
 		g.Y("widget: ", strconv.Quote("number"))
-		g.Y("value_type: ", strconv.Quote(strings.ToLower(widget.NumberWidget.ValueType.String())))
+		g.Y("value_type: ", strconv.Quote(strings.ToLower(widget.NumberWidget.GetValueType().String())))
 		g.Y("required: ", true) // required since Netlify uses empty string for no value instead of 0
-		if !field.Widget.RequiredValue {
-			g.Y("default: ", widget.NumberWidget.DefaultValue)
+		if !field.GetWidget().GetRequiredValue() {
+			g.Y("default: ", widget.NumberWidget.GetDefaultValue())
 		}
 	case *cmsv1.Widget_RelationWidget:
 		g.Y("widget: ", strconv.Quote("relation"))
-		g.Y("collection: ", strconv.Quote(widget.RelationWidget.Collection))
-		g.Y("value_field: ", strconv.Quote(widget.RelationWidget.ValueField))
+		g.Y("collection: ", strconv.Quote(widget.RelationWidget.GetCollection()))
+		g.Y("value_field: ", strconv.Quote(widget.RelationWidget.GetValueField()))
 		g.Y("search_fields:")
 		g.Up()
-		for _, searchField := range widget.RelationWidget.SearchFields {
+		for _, searchField := range widget.RelationWidget.GetSearchFields() {
 			g.Y("- ", strconv.Quote(searchField))
 		}
 		g.Down()
-		if len(widget.RelationWidget.DisplayFields) > 0 {
+		if len(widget.RelationWidget.GetDisplayFields()) > 0 {
 			g.Y("display_fields:")
 			g.Up()
-			for _, displayField := range widget.RelationWidget.DisplayFields {
+			for _, displayField := range widget.RelationWidget.GetDisplayFields() {
 				g.Y("- ", strconv.Quote(displayField))
 			}
 			g.Down()
 		}
-		g.Y("multiple: ", strconv.FormatBool(widget.RelationWidget.Multiple))
+		g.Y("multiple: ", strconv.FormatBool(widget.RelationWidget.GetMultiple()))
 	case *cmsv1.Widget_CustomWidget:
 		g.Y("widget: ", strconv.Quote(widget.CustomWidget.GetWidget()))
 		for _, option := range widget.CustomWidget.GetOptions() {
@@ -302,14 +302,14 @@ func collectMessages(config *cmsv1.Config, pkg protoreflect.FullName, files []*p
 				continue
 			}
 			collection = proto.Clone(collection).(*cmsv1.Collection)
-			if collection.Description == "" {
+			if collection.GetDescription() == "" {
 				collection.Description = strings.TrimSpace(string(message.Comments.Leading))
 			}
-			if collection.Owner != nil {
-				if collection.Description != "" {
+			if collection.GetOwner() != nil {
+				if collection.GetDescription() != "" {
 					collection.Description += " "
 				}
-				collection.Description += fmt.Sprintf("[%s]", collection.Owner.DisplayName)
+				collection.Description += fmt.Sprintf("[%s]", collection.GetOwner().GetDisplayName())
 			}
 			collectFields(collection, message)
 			config.Collections = append(config.Collections, collection)
@@ -371,7 +371,7 @@ func inferField(
 		protoField.Desc.Options(),
 		cmsv1.E_Field,
 	).(*cmsv1.Field); fieldAnnotation != nil {
-		if fieldAnnotation.Ignore {
+		if fieldAnnotation.GetIgnore() {
 			return nil, false
 		}
 		proto.Merge(field, fieldAnnotation)
@@ -393,8 +393,8 @@ func inferField(
 				StringWidget: &cmsv1.StringWidget{},
 			}
 		}
-		if len(resource.Pattern) > 0 {
-			pattern := resource.Pattern[0]
+		if len(resource.GetPattern()) > 0 {
+			pattern := resource.GetPattern()[0]
 			exp := regexp.MustCompile(`{.*}`).ReplaceAllString(pattern, `[a-z0-9][a-z0-9-]{0,61}[a-z0-9]`)
 			exp = "^" + exp + "$"
 			field.Widget.Pattern = &cmsv1.Widget_Pattern{
@@ -402,7 +402,7 @@ func inferField(
 				ErrorMessage: "Must match " + exp,
 			}
 			defaultValue := pattern[:strings.Index(pattern, "/")+1]
-			if sw, ok := field.Widget.WidgetType.(*cmsv1.Widget_StringWidget); ok {
+			if sw, ok := field.GetWidget().GetWidgetType().(*cmsv1.Widget_StringWidget); ok {
 				sw.StringWidget.DefaultValue = defaultValue
 			}
 		}
@@ -410,12 +410,12 @@ func inferField(
 	}
 
 	// if a widget is specified and is a type that is not able to do more decoration, no further inference
-	if field.Widget.WidgetType != nil && isUnDecoratableWidgetType(field.Widget.WidgetType) {
+	if field.Widget.WidgetType != nil && isUnDecoratableWidgetType(field.GetWidget().GetWidgetType()) {
 		return field, true
 	}
 
 	if owner, ok := resolveFieldOwner(append(parentFields, protoField)); ok {
-		field.Widget.Hint += fmt.Sprintf(" **[[%s]](%s)**", owner.DisplayName, owner.Uri)
+		field.Widget.Hint += fmt.Sprintf(" **[[%s]](%s)**", owner.GetDisplayName(), owner.GetUri())
 	}
 	switch protoField.Desc.Name() {
 	case "revision_id", "revision_create_time":
@@ -509,7 +509,7 @@ func inferField(
 			Fields:            objectFields,
 		}
 		if field.Widget.WidgetType != nil {
-			userDefinedListWidget := field.Widget.WidgetType.(*cmsv1.Widget_ListWidget).ListWidget
+			userDefinedListWidget := field.GetWidget().GetWidgetType().(*cmsv1.Widget_ListWidget).ListWidget
 			proto.Merge(listWidget, userDefinedListWidget)
 		}
 
