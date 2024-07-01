@@ -10,7 +10,7 @@ import "google/protobuf/timestamp.proto";
 // A kitchen sink example message.
 message KitchenSink {
   option (google.api.resource) = {
-    type: "netlify-cms-example.einride.tech/KitchenSink",
+    type: "netlify-cms-example.einride.tech/KitchenSink"
     pattern: "kitchenSinks/{kitchen_sink}"
   };
   option (einride.netlify.cms.v1.collection) = {

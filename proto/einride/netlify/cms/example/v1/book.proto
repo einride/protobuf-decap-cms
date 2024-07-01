@@ -10,7 +10,7 @@ import "google/protobuf/timestamp.proto";
 // A book.
 message Book {
   option (google.api.resource) = {
-    type: "netlify-cms-example.einride.tech/Book",
+    type: "netlify-cms-example.einride.tech/Book"
     pattern: "books/{book}"
   };
   option (einride.netlify.cms.v1.collection) = {

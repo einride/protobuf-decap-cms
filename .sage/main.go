@@ -94,7 +94,7 @@ func GoReleaser(ctx context.Context, snapshot bool) error {
 	}
 	args := []string{
 		"release",
-		"--rm-dist",
+		"--clean",
 	}
 	if len(sggit.Tags(ctx)) == 0 && !snapshot {
 		sg.Logger(ctx).Printf("no git tag found for %s, forcing snapshot mode", sggit.ShortSHA(ctx))
@@ -110,7 +110,17 @@ func ExampleConfig(ctx context.Context) error {
 	sg.Deps(ctx, Proto.BufGenerateExample)
 	sg.Logger(ctx).Println("copying example config...")
 	data, err := os.ReadFile(
-		sg.FromGitRoot("proto", "gen", "cms", "einride", "netlify", "cms", "example", "v1", "config.yml"),
+		sg.FromGitRoot(
+			"proto",
+			"gen",
+			"cms",
+			"einride",
+			"netlify",
+			"cms",
+			"example",
+			"v1",
+			"config.yml",
+		),
 	)
 	if err != nil {
 		return err
