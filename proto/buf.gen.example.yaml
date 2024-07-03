@@ -3,11 +3,11 @@ version: v1
 managed:
   enabled: true
   go_package_prefix:
-    default: go.einride.tech/protobuf-netlify-cms/proto/gen/cms
+    default: go.einride.tech/protobuf-decap-cms/proto/gen/cms
     except:
       - buf.build/googleapis/googleapis
 
 plugins:
-  - name: netlify-cms
+  - name: decap-cms
     out: proto/gen/cms
-    opt: module=go.einride.tech/protobuf-netlify-cms/proto/gen/cms
+    opt: module=go.einride.tech/protobuf-decap-cms/proto/gen/cms

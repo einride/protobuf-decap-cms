@@ -1,10 +1,10 @@
 syntax = "proto3";
 
-package einride.netlify.cms.example.v1;
+package einride.decap.cms.example.v1;
 
-import "einride/netlify/cms/v1/annotations.proto";
+import "einride/decap/cms/v1/annotations.proto";
 
-option (einride.netlify.cms.v1.config) = {
+option (einride.decap.cms.v1.config) = {
   backend: {
     name: "git-gateway"
     squash_merges: true

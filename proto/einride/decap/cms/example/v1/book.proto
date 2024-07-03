@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package einride.netlify.cms.example.v1;
+package einride.decap.cms.example.v1;
 
-import "einride/netlify/cms/v1/annotations.proto";
+import "einride/decap/cms/v1/annotations.proto";
 import "google/api/field_behavior.proto";
 import "google/api/resource.proto";
 import "google/protobuf/timestamp.proto";
@@ -10,10 +10,10 @@ import "google/protobuf/timestamp.proto";
 // A book.
 message Book {
   option (google.api.resource) = {
-    type: "netlify-cms-example.einride.tech/Book"
+    type: "decap-cms-example.einride.tech/Book"
     pattern: "books/{book}"
   };
-  option (einride.netlify.cms.v1.collection) = {
+  option (einride.decap.cms.v1.collection) = {
     name: "books"
     label: "Books"
     label_singular: "Book"

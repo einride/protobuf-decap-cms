@@ -1,25 +1,25 @@
 syntax = "proto3";
 
-package einride.netlify.cms.v1;
+package einride.decap.cms.v1;
 
 import "google/protobuf/descriptor.proto";
 
 extend google.protobuf.FileOptions {
-  // $((16#$(echo einride.netlify.cms.v1.config | sha256sum | cut -c 1-7)))
+  // $((16#$(echo einride.decap.cms.v1.config | sha256sum | cut -c 1-7)))
   Config config = 220007734;
 }
 
 extend google.protobuf.MessageOptions {
-  // $((16#$(echo einride.netlify.cms.v1.collection | sha256sum | cut -c 1-7)))
+  // $((16#$(echo einride.decap.cms.v1.collection | sha256sum | cut -c 1-7)))
   Collection collection = 73371499;
 }
 
 extend google.protobuf.FieldOptions {
-  // $((16#$(echo einride.netlify.cms.v1.field | sha256sum | cut -c 1-7)))
+  // $((16#$(echo einride.decap.cms.v1.field | sha256sum | cut -c 1-7)))
   Field field = 265097061;
 }
 
-// Netlify CMS config.
+// Decap CMS config.
 message Config {
   // Specifies how to access the content for your site,
   // including authentication.
@@ -43,7 +43,7 @@ message Config {
   // The slug configuration.
   Slug slug = 6;
 
-  // The heart of your Netlify CMS configuration,
+  // The heart of your Decap CMS configuration,
   // as it determines how content types and editor fields in the UI generate files
   // and content in your repository.
   repeated Collection collections = 7;
@@ -63,7 +63,7 @@ message Config {
     // when the pull request is merged, and the resulting commit is rebased onto
     // the target branch.
     bool squash_merges = 4;
-    // Customize the templates used by Netlify CMS to generate commit messages.
+    // Customize the templates used by Decap CMS to generate commit messages.
     CommitMessages commit_messages = 5;
     // OAuth client hostname (just the base domain, no path).
     string base_url = 6;
@@ -129,7 +129,7 @@ message Config {
   }
 }
 
-// Netlify CMS collection config.
+// Decap CMS collection config.
 message Collection {
   // Unique identifier for the collection, used as the key when referenced in other contexts
   // (like the relation widget).
@@ -172,7 +172,7 @@ message Owner {
   string uri = 2;
 }
 
-// Netlify CMS field config.
+// Decap CMS field config.
 message Field {
   // Unique identifier for the field.
   // Used as the key when referenced in other contexts (like the relation widget).
@@ -183,7 +183,7 @@ message Field {
   string comment = 3;
   // The field widget.
   Widget widget = 4;
-  // Flag indicating that this field should be ignored by Netlify CMS.
+  // Flag indicating that this field should be ignored by Decap CMS.
   bool ignore = 5;
   // Owner of the field (automatically appended to the label).
   Owner owner = 6;

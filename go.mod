@@ -1,4 +1,4 @@
-module go.einride.tech/protobuf-netlify-cms
+module go.einride.tech/protobuf-decap-cms
 
 go 1.22.5
 

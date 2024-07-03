@@ -1,10 +1,10 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: protobuf-netlify-cms-lib
-  description: "Protobuf plugin to manage resources in Netlify CMS"
+  name: protobuf-decap-cms-lib
+  description: "Protobuf plugin to manage resources in Decap CMS"
   annotations:
-    github.com/project-slug: einride/protobuf-netlify-cms
+    github.com/project-slug: einride/protobuf-decap-cms
     github.com/team-slug: einride/vehicle-intelligence
 spec:
   type: library
