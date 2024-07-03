@@ -67,10 +67,10 @@ clean-generated: $(sagefile)
 default: $(sagefile)
 	@$(sagefile) Proto:Default
 
+.PHONY: protoc-gen-decap-cms
+protoc-gen-decap-cms: $(sagefile)
+	@$(sagefile) Proto:ProtocGenDecapCMS
+
 .PHONY: protoc-gen-go
 protoc-gen-go: $(sagefile)
 	@$(sagefile) Proto:ProtocGenGo
-
-.PHONY: protoc-gen-netlify-cms
-protoc-gen-netlify-cms: $(sagefile)
-	@$(sagefile) Proto:ProtocGenNetlifyCMS

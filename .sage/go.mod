@@ -1,4 +1,4 @@
-module go.einride.tech/protobuf-netlify-cms/.sage
+module go.einride.tech/protobuf-decap-cms/.sage
 
 go 1.22.5
 

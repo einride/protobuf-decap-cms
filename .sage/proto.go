@@ -44,10 +44,10 @@ func (Proto) ProtocGenGo(ctx context.Context) error {
 	return err
 }
 
-func (Proto) ProtocGenNetlifyCMS(ctx context.Context) error {
+func (Proto) ProtocGenDecapCMS(ctx context.Context) error {
 	sg.Logger(ctx).Println("building binary...")
 	return sg.Command(
-		ctx, "go", "build", "-o", sg.FromBinDir("protoc-gen-netlify-cms"), "./cmd/protoc-gen-netlify-cms",
+		ctx, "go", "build", "-o", sg.FromBinDir("protoc-gen-decap-cms"), "./cmd/protoc-gen-decap-cms",
 	).Run()
 }
 
@@ -67,8 +67,8 @@ func (Proto) BufGenerate(ctx context.Context) error {
 }
 
 func (Proto) BufGenerateExample(ctx context.Context) error {
-	sg.Deps(ctx, Proto.BufGenerate, Proto.ProtocGenGo, Proto.ProtocGenNetlifyCMS)
-	sg.Logger(ctx).Println("generating Netlify CMS config...")
+	sg.Deps(ctx, Proto.BufGenerate, Proto.ProtocGenGo, Proto.ProtocGenDecapCMS)
+	sg.Logger(ctx).Println("generating Decap CMS config...")
 	cmd := sgbuf.Command(
 		ctx, "generate", "--output", sg.FromGitRoot(), "--template", "buf.gen.example.yaml", "--path", "einride",
 	)

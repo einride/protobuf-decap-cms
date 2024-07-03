@@ -1,6 +1,6 @@
-# Protobuf Netlify CMS
+# Protobuf Decap CMS
 
-Manage protobuf resources using [Netlify CMS](https://www.netlifycms.org/).
+Manage protobuf resources using [Decap CMS](https://decapcms.org/).
 
 ![Screenshot](./docs/screenshot.png)
 
@@ -12,7 +12,7 @@ Manage protobuf resources using [Netlify CMS](https://www.netlifycms.org/).
 // A book.
 message Book {
   option (google.api.resource) = {
-    type: "netlify-cms-example.einride.tech/Book",
+    type: "decap-cms-example.einride.tech/Book",
     pattern: "books/{book}"
   };
 
@@ -47,18 +47,18 @@ message Book {
 
 [Example ≫](./example/books/books-alice-in-wonderland.json)
 
-### Step 3: Configure a Netlify CMS collection
+### Step 3: Configure a Decap CMS collection
 
 See
-[Netlify CMS Configuration: Collections](https://www.netlifycms.org/docs/configuration-options/#collections).
+[Decap CMS Configuration: Collections](https://decapcms.org/docs/configuration-options/?#collections).
 
 ```proto
 message Book {
   option (google.api.resource) = {
-    type: "netlify-cms-example.einride.tech/Book",
+    type: "decap-cms-example.einride.tech/Book",
     pattern: "books/{book}"
   };
-  option (einride.netlify.cms.v1.collection) = {
+  option (einride.decap.cms.v1.collection) = {
     name: "books"
     label: "Books"
     label_singular: "Book"
@@ -75,15 +75,14 @@ message Book {
 }
 ```
 
-[Example ≫](./proto/einride/netlify/cms/example/v1/book.proto)
+[Example ≫](./proto/einride/decap/cms/example/v1/book.proto)
 
-### Step 4: Add Netlify CMS config to your proto package
+### Step 4: Add Decap CMS config to your proto package
 
-See
-[Netlify CMS Configuration](https://www.netlifycms.org/docs/configuration-options/#collections).
+See [Decap CMS Configuration](https://decapcms.org/docs/configuration-options/).
 
 ```proto
-option (einride.netlify.cms.v1.config) = {
+option (einride.decap.cms.v1.config) = {
   backend: {
     name: "github"
     repo: "your-org/your-repo"
@@ -93,12 +92,12 @@ option (einride.netlify.cms.v1.config) = {
 };
 ```
 
-[Example ≫](./proto/einride/netlify/cms/example/v1/config.proto)
+[Example ≫](./proto/einride/decap/cms/example/v1/config.proto)
 
-### Step 5: Generate a Netlify CMS YAML config
+### Step 5: Generate a Decap CMS YAML config
 
-Use the [protoc-gen-netlify-cms](./cmd/protoc-gen-netlify-cms) protobuf plugin
-to generate a Netlify CMS YAML config.
+Use the [protoc-gen-decap-cms](./cmd/protoc-gen-decap-cms) protobuf plugin to
+generate a Decap CMS YAML config.
 
 ```yaml
 version: v1
@@ -106,21 +105,21 @@ version: v1
 managed:
   enabled: true
   go_package_prefix:
-    default: go.einride.tech/protobuf-netlify-cms/proto/gen/cms
+    default: go.einride.tech/protobuf-decap-cms/proto/gen/cms
     except:
       - buf.build/googleapis/googleapis
 
 plugins:
-  - name: netlify-cms
+  - name: decap-cms
     out: proto/gen/cms
-    opt: module=go.einride.tech/protobuf-netlify-cms/proto/gen/cms
+    opt: module=go.einride.tech/protobuf-decap-cms/proto/gen/cms
 ```
 
 [Example ≫](./proto/buf.gen.example.yaml)
 
-### Step 6: Manage your resources using Netlify CMS
+### Step 6: Manage your resources using Decap CMS
 
-Copy the generated config to where your Netlify CMS admin application is hosted.
+Copy the generated config to where your Decap CMS admin application is hosted.
 
 [Example ≫](./example/admin)
 

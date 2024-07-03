@@ -3,9 +3,9 @@ before:
     - go mod download
 
 builds:
-  - id: protoc-gen-netlify-cms
-    binary: protoc-gen-netlify-cms
-    main: ./cmd/protoc-gen-netlify-cms/main.go
+  - id: protoc-gen-decap-cms
+    binary: protoc-gen-decap-cms
+    main: ./cmd/protoc-gen-decap-cms/main.go
     env:
       - CGO_ENABLED=0
     goos:

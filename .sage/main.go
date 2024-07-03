@@ -114,7 +114,7 @@ func ExampleConfig(ctx context.Context) error {
 			"gen",
 			"cms",
 			"einride",
-			"netlify",
+			"decap",
 			"cms",
 			"example",
 			"v1",
@@ -129,7 +129,7 @@ func ExampleConfig(ctx context.Context) error {
 
 func LocalProxyServer(ctx context.Context) error {
 	sg.Logger(ctx).Println("starting local proxy server...")
-	return sg.Command(ctx, "npm", "exec", "netlify-cms-proxy-server").Run()
+	return sg.Command(ctx, "npm", "exec", "decap-server").Run()
 }
 
 func LocalFileServer(ctx context.Context) error {
