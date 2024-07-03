@@ -1,3 +1,5 @@
 .idea/
 .vscode/
 .semrel/
+go.work
+go.work.sum
