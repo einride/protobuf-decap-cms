@@ -436,6 +436,15 @@ message RelationWidget {
   repeated string display_fields = 4;
   // Flag indicating if multiple values are supported.
   bool multiple = 5;
+  // Filters by which the available collection items are filtered.
+  repeated Filter filters = 6;
+  // Filter is passed if the value of `field` is one of the values in `values`.
+  message Filter {
+    // The field name of where to read the value.
+    string field = 1;
+    // The values that satisfy the filter.
+    repeated string values = 2;
+  }
 }
 
 // The select widget allows you to pick a string value from a dropdown menu.

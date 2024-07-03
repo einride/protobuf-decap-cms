@@ -87,6 +87,15 @@ message KitchenSink {
         search_fields: "name"
         search_fields: "title"
         display_fields: "title"
+        filters: [
+          {
+            field: "author"
+            values: [
+              "Lewis Carroll",
+              "Marcus Aurelius"
+            ]
+          }
+        ]
       }
     }
   ];
