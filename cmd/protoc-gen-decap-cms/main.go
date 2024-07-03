@@ -280,6 +280,22 @@ func genField(g *generatedYAMLFile, field *cmsv1.Field) {
 			g.Down()
 		}
 		g.Y("multiple: ", strconv.FormatBool(widget.RelationWidget.GetMultiple()))
+		if len(widget.RelationWidget.GetFilters()) > 0 {
+			g.Y("filters:")
+			g.Up()
+			for _, filter := range widget.RelationWidget.GetFilters() {
+				g.Y("- field: ", strconv.Quote(filter.GetField()))
+				g.Up()
+				g.Y("values:")
+				g.Up()
+				for _, value := range filter.GetValues() {
+					g.Y("- ", strconv.Quote(value))
+				}
+				g.Down()
+				g.Down()
+			}
+			g.Down()
+		}
 	case *cmsv1.Widget_CustomWidget:
 		g.Y("widget: ", strconv.Quote(widget.CustomWidget.GetWidget()))
 		for _, option := range widget.CustomWidget.GetOptions() {

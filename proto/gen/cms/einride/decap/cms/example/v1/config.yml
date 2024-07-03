@@ -185,6 +185,11 @@ collections:
         display_fields:
           - "title"
         multiple: false
+        filters:
+          - field: "author"
+            values:
+              - "Lewis Carroll"
+              - "Marcus Aurelius"
 
       - name: "specs"
         label: "SPECS"
