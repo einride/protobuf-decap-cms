@@ -428,7 +428,7 @@ func inferField(
 		field.Widget.WidgetType = &cmsv1.Widget_DateTimeWidget{
 			DateTimeWidget: &cmsv1.DateTimeWidget{
 				DateFormat: "YYYY-MM-DD",
-				TimeFormat: "HH:mm",
+				TimeFormat: "HH:mmZ",
 			},
 		}
 		if protoField.Desc.Name() == "create_time" {
