@@ -75,7 +75,6 @@ func GitVerifyNoDiff(ctx context.Context) error {
 func SemanticRelease(ctx context.Context, repo string, dry bool) error {
 	sg.Logger(ctx).Println("triggering release...")
 	args := []string{
-		"--allow-initial-development-versions",
 		"--allow-no-changes",
 		"--ci-condition=default",
 		"--provider=github",
