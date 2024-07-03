@@ -1236,15 +1236,22 @@ type DateTimeWidget struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// Accepts a datetime string. Defaults to current datetime.
+	// Accepts a datetime string, or an empty string to accept blank input;
+	// otherwise defaults to current datetime.
 	DefaultValue string `protobuf:"bytes,1,opt,name=default_value,json=defaultValue,proto3" json:"default_value,omitempty"`
-	// Sets storage format. Accepts Moment.js tokens. Defaults to raw Date object.
+	// Sets storage format; accepts Day.js formats; defaults to ISO8601.
+	// If set, date_format and time_format are not used.
 	Format string `protobuf:"bytes,2,opt,name=format,proto3" json:"format,omitempty"`
-	// Sets date display format in UI. Accepts Moment.js tokens.
+	// Sets date display format in UI; boolean or Day.js formats.
+	// If used without time_format, only the date picker is displayed.
 	DateFormat string `protobuf:"bytes,3,opt,name=date_format,json=dateFormat,proto3" json:"date_format,omitempty"`
-	// Sets time display format in UI. Accepts Moment.js tokens.
+	// Sets time display format in UI; boolean or Day.js formats.
+	// If used without date_format, only the time picker is displayed.
 	TimeFormat string `protobuf:"bytes,4,opt,name=time_format,json=timeFormat,proto3" json:"time_format,omitempty"`
-	// When set to true, the datetime picker will display times in UTC.
+	// When set to true, the datetime picker will display times in UTC. When false,
+	// the datetime picker will display times in the user's local timezone.
+	// When using date-only formats, it can be helpful to set this to true so
+	// users in all time zones will see the same date in the datetime picker.
 	PickerUtc bool `protobuf:"varint,5,opt,name=picker_utc,json=pickerUtc,proto3" json:"picker_utc,omitempty"`
 }
 

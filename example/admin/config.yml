@@ -54,7 +54,7 @@ collections:
         hint: "The timestamp the body build was created."
         widget: "datetime"
         date_format: "YYYY-MM-DD"
-        time_format: "HH:mm"
+        time_format: "HH:mmZ"
 
       - name: "author"
         label: "AUTHOR"
@@ -112,7 +112,7 @@ collections:
         hint: "The timestamp the kitchen sink was created."
         widget: "datetime"
         date_format: "YYYY-MM-DD"
-        time_format: "HH:mm"
+        time_format: "HH:mmZ"
 
       - name: "display_name"
         label: "DISPLAY NAME"
@@ -170,6 +170,21 @@ collections:
         widget: "test"
         outer:
           inner: 42
+
+      - name: "book"
+        label: "BOOK"
+        comment: "A value with relation to another entity"
+        required: true
+        hint: "A value with relation to another entity"
+        widget: "relation"
+        collection: "books"
+        value_field: "name"
+        search_fields:
+          - "name"
+          - "title"
+        display_fields:
+          - "title"
+        multiple: false
 
       - name: "specs"
         label: "SPECS"

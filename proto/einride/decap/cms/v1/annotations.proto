@@ -287,15 +287,22 @@ message ColorWidget {
 
 // The datetime widget translates a datetime picker to a datetime string.
 message DateTimeWidget {
-  // Accepts a datetime string. Defaults to current datetime.
+  // Accepts a datetime string, or an empty string to accept blank input;
+  // otherwise defaults to current datetime.
   string default_value = 1;
-  // Sets storage format. Accepts Moment.js tokens. Defaults to raw Date object.
+  // Sets storage format; accepts Day.js formats; defaults to ISO8601.
+  // If set, date_format and time_format are not used.
   string format = 2;
-  // Sets date display format in UI. Accepts Moment.js tokens.
+  // Sets date display format in UI; boolean or Day.js formats.
+  // If used without time_format, only the date picker is displayed.
   string date_format = 3;
-  // Sets time display format in UI. Accepts Moment.js tokens.
+  // Sets time display format in UI; boolean or Day.js formats.
+  // If used without date_format, only the time picker is displayed.
   string time_format = 4;
-  // When set to true, the datetime picker will display times in UTC.
+  // When set to true, the datetime picker will display times in UTC. When false,
+  // the datetime picker will display times in the user's local timezone.
+  // When using date-only formats, it can be helpful to set this to true so
+  // users in all time zones will see the same date in the datetime picker.
   bool picker_utc = 5;
 }
 

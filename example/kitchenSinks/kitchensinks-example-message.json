@@ -1,7 +1,7 @@
 {
   "name": "kitchenSinks/example-message",
   "display_name": "Example Message",
-  "create_time": "2023-01-15T13:58:00.792Z",
+  "create_time": "2023-01-15T14:58+01:00",
   "example_enum": "TWO",
   "double_value": 0.42,
   "float_value": 0.42,
