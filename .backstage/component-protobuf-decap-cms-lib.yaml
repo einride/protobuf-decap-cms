@@ -5,8 +5,8 @@ metadata:
   description: "Protobuf plugin to manage resources in Decap CMS"
   annotations:
     github.com/project-slug: einride/protobuf-decap-cms
-    github.com/team-slug: einride/vehicle-intelligence
+    github.com/team-slug: einride/asset-intelligence
 spec:
   type: library
   lifecycle: production
-  owner: vehicle-intelligence
+  owner: asset-intelligence
