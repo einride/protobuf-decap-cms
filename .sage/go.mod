@@ -2,4 +2,4 @@ module go.einride.tech/protobuf-decap-cms/.sage
 
 go 1.22.5
 
-require go.einride.tech/sage v0.371.0
+require go.einride.tech/sage v0.377.0
